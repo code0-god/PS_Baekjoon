@@ -10,6 +10,6 @@ int main() {
         cout << 0;
         return 0;
     }
-    cout << a + b;
+    cout << a + b << '\n';
     return 0;
 }
