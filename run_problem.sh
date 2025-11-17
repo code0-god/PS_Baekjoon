@@ -6,7 +6,7 @@ usage() {
 Usage: ./run_problem.sh <problem_id> <language> [input_file]
 
 Runs the selected Baekjoon solution from repo root using the provided stdin sample.
-Supported languages: cpp, python, rust.
+Supported languages: cpp, py, rs.
 If input_file is omitted, the first *.txt file under problems/<id>/tests is used.
 USAGE
 }
@@ -20,7 +20,12 @@ PROBLEM_ID="$1"
 LANGUAGE="${2,,}"
 INPUT_FILE="${3:-}"
 PROBLEM_DIR="problems/${PROBLEM_ID}"
-LANG_DIR="${PROBLEM_DIR}/${LANGUAGE}"
+case "$LANGUAGE" in
+    py) LANGUAGE_DIR_NAME="python" ;;
+    rs) LANGUAGE_DIR_NAME="rust" ;;
+    *) LANGUAGE_DIR_NAME="$LANGUAGE" ;;
+esac
+LANG_DIR="${PROBLEM_DIR}/${LANGUAGE_DIR_NAME}"
 TEST_DIR="${PROBLEM_DIR}/tests"
 
 if [[ ! -d "$PROBLEM_DIR" ]]; then
@@ -50,7 +55,7 @@ fi
 
 COMMAND=()
 case "$LANGUAGE" in
-    python)
+    py)
         SCRIPT_FILE="${LANG_DIR}/main.py"
         if [[ ! -f "$SCRIPT_FILE" ]]; then
             echo "[error] Missing $SCRIPT_FILE" >&2
@@ -69,7 +74,7 @@ case "$LANGUAGE" in
         g++ -std=c++17 -O2 -pipe "$SOURCE_FILE" -o "$OUTPUT_FILE"
         COMMAND=("$OUTPUT_FILE")
         ;;
-    rust)
+    rs)
         MANIFEST_FILE="${LANG_DIR}/Cargo.toml"
         if [[ ! -f "$MANIFEST_FILE" ]]; then
             echo "[error] Missing $MANIFEST_FILE" >&2
