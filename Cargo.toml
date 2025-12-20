@@ -1,0 +1,7 @@
+[workspace]
+resolver = "2"
+members = [
+    "problems/1000/rust",
+    "problems/1001/rust",
+    "problems/2438/rust",
+]

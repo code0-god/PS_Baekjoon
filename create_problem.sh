@@ -36,6 +36,22 @@ cat <<'SAMPLE' > "${TEST_DIR}/sample1.txt"
 # 입력 예시를 여기에 작성하세요
 SAMPLE
 
+update_workspace_members() {
+    local workspace_file="Cargo.toml"
+    mapfile -t members < <(find problems -type f -path '*/rust/Cargo.toml' | sort)
+    {
+        echo "[workspace]"
+        echo "resolver = \"2\""
+        echo "members = ["
+        for m in "${members[@]}"; do
+            printf '    \"%s\",\n' "$m"
+        done
+        echo "]"
+    } > "$workspace_file"
+}
+
+RUST_CREATED=false
+
 generate_cpp() {
     local dir="$1/cpp"
     mkdir -p "$dir"
@@ -102,6 +118,7 @@ for lang in "${LANGS[@]}"; do
             ;;
         rust)
             generate_rust "$PROBLEM_DIR"
+            RUST_CREATED=true
             ;;
         *)
             echo "[warn] 지원하지 않는 언어: $lang" >&2
@@ -110,3 +127,8 @@ for lang in "${LANGS[@]}"; do
 done
 
 echo "[info] 생성 완료: ${PROBLEM_DIR}"
+
+if [[ "$RUST_CREATED" == true ]]; then
+    update_workspace_members
+    echo "[info] Cargo workspace 업데이트 완료."
+fi
