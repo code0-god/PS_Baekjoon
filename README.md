@@ -43,7 +43,7 @@ PS_Baekjoon/
 ./run_problem.sh 1000 cpp problems/1000/tests/sample1.txt
 
 # Rust 풀이 실행
-./run_problem.sh 1000 rust
+./run_problem.sh 1000 rs
 ```
 
 ## 새로운 문제 추가 절차
